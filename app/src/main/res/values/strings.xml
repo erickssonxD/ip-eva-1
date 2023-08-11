@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">evauno</string>
+    <string name="title_activity_honorary_employee">HonoraryEmployeeActivity</string>
 </resources>
