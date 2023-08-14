@@ -19,9 +19,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val intentRegularEmployee = Intent(this, RegularEmployeeActivity::class.java)
         val intentToRegularEmployee: () -> Unit = {
-            startActivity(intentRegularEmployee)
+            startActivity(Intent(this, RegularEmployeeActivity::class.java))
         }
         val intentToExternalEmployee: () -> Unit = {
             startActivity(Intent(this, HonoraryEmployeeActivity::class.java))

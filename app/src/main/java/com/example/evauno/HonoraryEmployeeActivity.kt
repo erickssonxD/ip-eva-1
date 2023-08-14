@@ -20,52 +20,72 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.evauno.ui.theme.EvaunoTheme
 
 class HonoraryEmployeeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val onGoBackButtonClick: () -> Unit = {
+            finish()
+        }
+
         setContent {
             EvaunoTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    HonoraryScreen()
+                    HonoraryScreen(onGoBackButtonClick)
                 }
             }
         }
+
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HonoraryScreen(modifier: Modifier = Modifier) {
+fun HonoraryScreen(onGoBackButtonClick: () -> Unit, modifier: Modifier = Modifier) {
     var gross by remember { mutableStateOf("0.0") }
     var net by remember { mutableStateOf("0.0") }
 
-    Column {
-        Text(
-            text = "Calculo de salario neto para empleado con honorarios",
-            modifier = modifier
-        )
-        TextField(
-            value = gross,
-            onValueChange = { gross = it },
-            label = { Text("Sueldo bruto") },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Decimal
+    ConstraintLayout {
+        val (backButton) = createRefs()
+        Column {
+            Text(
+                text = "Calculo de salario neto para empleado con honorarios",
+                modifier = modifier
             )
-        )
-        Button(onClick = {
-            val grossSalary = gross.toDouble()
-            val employee = HonoraryEmployee(grossSalary)
-            net = employee.netSalary().toString()
-        }) {
-            Text(text = "Calcular")
+            TextField(
+                value = gross,
+                onValueChange = { gross = it },
+                label = { Text("Sueldo bruto") },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Decimal
+                )
+            )
+            Button(onClick = {
+                val grossSalary = gross.toDouble()
+                val employee = HonoraryEmployee(grossSalary)
+                net = employee.netSalary().toString()
+            }) {
+                Text(text = "Calcular")
+            }
+            Text("El salario neto es: $net")
         }
-        Text("El salario neto es: $net")
+
+        // Button constrained at the bottom of the screen
+        Button(modifier = Modifier.constrainAs(backButton) {
+            bottom.linkTo(parent.bottom)
+            start.linkTo(parent.start)
+            end.linkTo(parent.end)
+        },
+            onClick = onGoBackButtonClick
+        ) {
+            Text(text = "Regresar")
+        }
     }
 }
 
@@ -73,6 +93,6 @@ fun HonoraryScreen(modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview2() {
     EvaunoTheme {
-        HonoraryScreen()
+        HonoraryScreen({})
     }
 }
